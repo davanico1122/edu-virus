@@ -12,11 +12,16 @@ SetWorkingDir, %A_ScriptDir%
 isActive := true
 originalWallpaper := ""
 orientationOriginal := 0
-processesToMonitor := ["chrome.exe", "firefox.exe", "msedge.exe"]
-sites := ["https://youtube.com/watch?v=dQw4w9WgXcQ", "https://youtube.com/watch?v=oHg5SJYRHA0", "https://www.bleepingcomputer.com/", "https://www.howtogeek.com/"]
+processesToMonitor1 := "chrome.exe"
+processesToMonitor2 := "firefox.exe"
+processesToMonitor3 := "msedge.exe"
+sites1 := "https://youtube.com/watch?v=dQw4w9WgXcQ"
+sites2 := "https://youtube.com/watch?v=oHg5SJYRHA0"
+sites3 := "https://www.bleepingcomputer.com/"
+sites4 := "https://www.howtogeek.com/"
 
 ; Initialize simulation
-InitializeSimulation()
+Gosub, InitializeSimulation
 
 ; Set timers
 SetTimer, MainEffects, 10000
@@ -25,131 +30,161 @@ SetTimer, RandomSound, 30000
 SetTimer, ScreenEffects, 60000
 
 ; Hotkeys
-^!End::EmergencyStop() ; Ctrl+Alt+End
-F1::ShowEducationMenu()
-^!r::ReloadScript()
-^!d::ToggleSimulation()
+^!End::Gosub, EmergencyStop ; Ctrl+Alt+End
+F1::Gosub, ShowEducationMenu
+^!r::Reload
+^!d::Gosub, ToggleSimulation
 
 ; =====================================================
 ; CORE FUNCTIONS
 ; =====================================================
 
-InitializeSimulation() {
+InitializeSimulation:
     ; Save original settings
     originalWallpaper := GetCurrentWallpaper()
     orientationOriginal := GetDisplayOrientation()
     
     ; Show warning
-    ShowWarning()
+    Gosub, ShowWarning
     
     ; Initial effects
-    ChangeWallpaper()
-    PlayStartSound()
-    CreateDesktopFiles()
+    Gosub, ChangeWallpaper
+    Gosub, PlayStartSound
+    Gosub, CreateDesktopFiles
     ShowNotification("Virus simulation started! Press F1 for help")
-}
+return
 
-MainEffects() {
+MainEffects:
     if (!isActive) 
         return
     
     Random, effect, 1, 7
-    switch effect
-    {
-        case 1: OpenRandomSite()
-        case 2: RandomizeWindows()
-        case 3: MouseJitter()
-        case 4: ChangeClipboard()
-        case 5: FakeErrorMessages()
-        case 6: FakeSystemScan()
-        case 7: OpenRickRoll()
+    if (effect = 1) {
+        Gosub, OpenRandomSite
+    } else if (effect = 2) {
+        Gosub, RandomizeWindows
+    } else if (effect = 3) {
+        Gosub, MouseJitter
+    } else if (effect = 4) {
+        Gosub, ChangeClipboard
+    } else if (effect = 5) {
+        Gosub, FakeErrorMessages
+    } else if (effect = 6) {
+        Gosub, FakeSystemScan
+    } else if (effect = 7) {
+        Gosub, OpenRickRoll
     }
-}
+return
 
-MonitorProcesses() {
+MonitorProcesses:
     if (!isActive)
         return
     
-    for index, process in processesToMonitor {
-        Process, Exist, %process%
-        if (ErrorLevel = 0) {
-            Run, % process
-            ShowNotification("Restarted " process " for your safety!")
-        }
+    Process, Exist, %processesToMonitor1%
+    if (ErrorLevel = 0) {
+        Run, %processesToMonitor1%
+        ShowNotification("Restarted " . processesToMonitor1 . " for your safety!")
     }
-}
+    
+    Process, Exist, %processesToMonitor2%
+    if (ErrorLevel = 0) {
+        Run, %processesToMonitor2%
+        ShowNotification("Restarted " . processesToMonitor2 . " for your safety!")
+    }
+    
+    Process, Exist, %processesToMonitor3%
+    if (ErrorLevel = 0) {
+        Run, %processesToMonitor3%
+        ShowNotification("Restarted " . processesToMonitor3 . " for your safety!")
+    }
+return
 
-RandomSound() {
+RandomSound:
     if (!isActive)
         return
     
-    SoundBeep, % Random(500, 2000), % Random(100, 500)
-}
+    Random, freq, 500, 2000
+    Random, dur, 100, 500
+    SoundBeep, %freq%, %dur%
+return
 
-ScreenEffects() {
+ScreenEffects:
     if (!isActive)
         return
     
     Random, effect, 1, 3
-    switch effect
-    {
-        case 1: RotateScreen(180, 5000)
-        case 2: InvertColors(3000)
-        case 3: ShakeScreen(5, 1000)
+    if (effect = 1) {
+        Gosub, RotateScreen
+    } else if (effect = 2) {
+        Gosub, ShakeScreen
+    } else {
+        ShowNotification("Screen effect triggered!")
     }
-}
+return
 
 ; =====================================================
 ; SIMULATION EFFECTS (SAFE)
 ; =====================================================
 
-OpenRandomSite() {
-    Random, randIndex, 1, % sites.Length()
-    Run, % sites[randIndex]
-}
+OpenRandomSite:
+    Random, randIndex, 1, 4
+    if (randIndex = 1) {
+        Run, %sites1%
+    } else if (randIndex = 2) {
+        Run, %sites2%
+    } else if (randIndex = 3) {
+        Run, %sites3%
+    } else {
+        Run, %sites4%
+    }
+return
 
-RandomizeWindows() {
+RandomizeWindows:
     WinGet, windows, List
     Loop, %windows% {
         winID := windows%A_Index%
         WinGetTitle, title, ahk_id %winID%
         if (title != "" && title != "Program Manager") {
-            Random, newX, -100, A_ScreenWidth-200
-            Random, newY, -100, A_ScreenHeight-200
-            Random, newW, 300, A_ScreenWidth
-            Random, newH, 200, A_ScreenHeight
-            WinMove, ahk_id %winID%,, newX, newY, newW, newH
+            Random, newX, -100, % A_ScreenWidth-200
+            Random, newY, -100, % A_ScreenHeight-200
+            Random, newW, 300, %A_ScreenWidth%
+            Random, newH, 200, %A_ScreenHeight%
+            WinMove, ahk_id %winID%,, %newX%, %newY%, %newW%, %newH%
         }
     }
-}
+return
 
-MouseJitter() {
+MouseJitter:
     Random, xOffset, -100, 100
     Random, yOffset, -100, 100
-    MouseMove, xOffset, yOffset, 50, R
-}
+    MouseMove, %xOffset%, %yOffset%, 50, R
+return
 
-ChangeClipboard() {
+ChangeClipboard:
     savedClip := ClipboardAll
     Clipboard := "!!! WARNING: System compromised! (Educational Simulation) !!!"
     Sleep 2000
     Clipboard := savedClip
-}
+return
 
-FakeErrorMessages() {
-    errors := [
-        "Critical System Error: 0x80070005",
-        "Memory Access Violation at 0x7FF89876",
-        "Security Threat Detected: Trojan:Script/Wacatac.B!ml",
-        "Your files are being encrypted! (Simulation)",
-        "System32 files corrupted! Restart required"
-    ]
+FakeErrorMessages:
+    Random, randIndex, 1, 5
+    if (randIndex = 1) {
+        errorMsg := "Critical System Error: 0x80070005"
+    } else if (randIndex = 2) {
+        errorMsg := "Memory Access Violation at 0x7FF89876"
+    } else if (randIndex = 3) {
+        errorMsg := "Security Threat Detected: Trojan:Script/Wacatac.B!ml"
+    } else if (randIndex = 4) {
+        errorMsg := "Your files are being encrypted! (Simulation)"
+    } else {
+        errorMsg := "System32 files corrupted! Restart required"
+    }
     
-    Random, randIndex, 1, % errors.Length()
-    TrayTip, SYSTEM ALERT, % errors[randIndex], 3, 3
-}
+    TrayTip, SYSTEM ALERT, %errorMsg%, 3, 3
+return
 
-FakeSystemScan() {
+FakeSystemScan:
     Progress, B1 W300, Scanning system for threats..., Educational Simulation, Malware Scanner
     Loop, 100 {
         Progress, %A_Index%
@@ -157,72 +192,75 @@ FakeSystemScan() {
     }
     Progress, Off
     ShowNotification("Scan complete! 127 threats found (Simulation)")
-}
+return
 
-OpenRickRoll() {
+OpenRickRoll:
     Run, https://youtube.com/watch?v=dQw4w9WgXcQ
-}
+return
 
-RotateScreen(degrees, duration) {
+RotateScreen:
     current := GetDisplayOrientation()
-    SetDisplayOrientation(degrees)
-    Sleep duration
+    SetDisplayOrientation(180)
+    Sleep 5000
     SetDisplayOrientation(current)
-}
+return
 
-InvertColors(duration) {
-    DllCall("SetWindowCompositionAttribute", "ptr", WinExist("A"), "ptr", VarSetCapacity(CA, 4, 0) ? &CA : &CA, "uint", 0)
-    Sleep duration
-    DllCall("SetWindowCompositionAttribute", "ptr", WinExist("A"), "ptr", VarSetCapacity(CA, 4, 0) ? &CA : &CA, "uint", 1)
-}
-
-ShakeScreen(intensity, duration) {
+ShakeScreen:
+    WinGet, windows, List
     startTime := A_TickCount
-    While (A_TickCount - startTime < duration) {
-        Random, xOffset, -intensity, intensity
-        Random, yOffset, -intensity, intensity
-        for _, id in GetWindowList() {
-            WinGetPos, x, y,,, ahk_id %id%
-            WinMove, ahk_id %id%,, x + xOffset, y + yOffset
+    While (A_TickCount - startTime < 1000) {
+        Random, xOffset, -5, 5
+        Random, yOffset, -5, 5
+        Loop, %windows% {
+            winID := windows%A_Index%
+            WinGetPos, x, y,,, ahk_id %winID%
+            if (x != "" && y != "") {
+                newX := x + xOffset
+                newY := y + yOffset
+                WinMove, ahk_id %winID%,, %newX%, %newY%
+            }
         }
         Sleep 50
     }
-    ; Restore original positions
-    for _, id in GetWindowList() {
-        WinRestore, ahk_id %id%
-    }
-}
+return
 
-CreateDesktopFiles() {
+CreateDesktopFiles:
     desktop := A_Desktop
     Loop, 5 {
-        FileAppend, This is a harmless text file for educational purposes. `nDelete me anytime! `nSimulation ID: %A_Now%, %desktop%\Warning_%A_Index%.txt
+        fileName := desktop . "\Warning_" . A_Index . ".txt"
+        FileAppend, This is a harmless text file for educational purposes. `nDelete me anytime! `nSimulation ID: %A_Now%, %fileName%
     }
-}
+return
+
+ChangeWallpaper:
+    ; Skip wallpaper change to avoid issues
+    ShowNotification("Wallpaper effect triggered!")
+return
 
 ; =====================================================
 ; CONTROL FUNCTIONS
 ; =====================================================
 
-EmergencyStop() {
-    global isActive
+EmergencyStop:
     isActive := false
     
-    ; Restore original settings
-    SetWallpaper(originalWallpaper)
-    SetDisplayOrientation(orientationOriginal)
+    ; Restore original settings if needed
+    if (originalWallpaper != "") {
+        SetWallpaper(originalWallpaper)
+    }
     
-    ; Cleanup
+    ; Cleanup desktop files
+    desktop := A_Desktop
     Loop, 5 {
-        FileDelete, %A_Desktop%\Warning_%A_Index%.txt
+        fileName := desktop . "\Warning_" . A_Index . ".txt"
+        FileDelete, %fileName%
     }
     
     ShowNotification("Simulation stopped! All effects disabled")
     ExitApp
-}
+return
 
-ToggleSimulation() {
-    global isActive
+ToggleSimulation:
     isActive := !isActive
     
     if (isActive) {
@@ -230,15 +268,11 @@ ToggleSimulation() {
     } else {
         ShowNotification("Simulation PAUSED")
     }
-}
+return
 
-ReloadScript() {
-    Reload
-}
-
-ShowEducationMenu() {
+ShowEducationMenu:
     MsgBox, 64, Cybersecurity Education, 
-    (Ltrim
+    (
     ADVANCED VIRUS SIMULATION (EDUCATIONAL)
     
     Features:
@@ -272,22 +306,16 @@ ShowEducationMenu() {
     - Keep systems updated
     - Backup important data
     - Don't open suspicious attachments
-    
-    YouTube Content Ideas:
-    1. Show simulation effects
-    2. Explain malware techniques
-    3. Demonstrate proper removal
-    4. Compare to real malware
     )
-}
+return
 
 ; =====================================================
 ; HELPER FUNCTIONS
 ; =====================================================
 
-ShowWarning() {
+ShowWarning:
     MsgBox, 48, EDUCATIONAL SIMULATION, 
-    (Ltrim
+    (
     WARNING: ADVANCED VIRUS SIMULATION ACTIVATED!
     
     This is a safe educational demonstration showing 
@@ -303,15 +331,15 @@ ShowWarning() {
     This simulation is TEMPORARY and NON-DESTRUCTIVE.
     All effects will stop after system restart.
     )
-}
+return
 
 ShowNotification(message) {
     TrayTip, SIMULATION NOTICE, %message%, 5, 1
 }
 
-PlayStartSound() {
+PlayStartSound:
     SoundPlay, *16
-}
+return
 
 GetCurrentWallpaper() {
     VarSetCapacity(wallpaper, 1024 * 2, 0)
@@ -325,23 +353,13 @@ SetWallpaper(path) {
 
 GetDisplayOrientation() {
     VarSetCapacity(dev, 156, 0)
-    DllCall("EnumDisplaySettingsA", "UInt", 0, "UInt", -1, "UInt", &dev)
-    return NumGet(dev, 156-24, "UInt")
+    DllCall("EnumDisplaySettingsA", "UInt", 0, "UInt", -1, "Ptr", &dev)
+    return NumGet(dev, 132, "UInt")
 }
 
 SetDisplayOrientation(orientation) {
     VarSetCapacity(dev, 156, 0)
-    DllCall("EnumDisplaySettingsA", "UInt", 0, "UInt", -1, "UInt", &dev)
-    NumPut(orientation, dev, 156-24, "UInt")
-    DllCall("ChangeDisplaySettingsExA", "UInt", 0, "UInt", &dev, "UInt", 0, "UInt", 0x01|0x02|0x04, "UInt", 0)
-}
-
-GetWindowList() {
-    WinGet, windows, List
-    windowList := []
-    Loop, %windows% {
-        winID := windows%A_Index%
-        windowList.Push(winID)
-    }
-    return windowList
+    DllCall("EnumDisplaySettingsA", "UInt", 0, "UInt", -1, "Ptr", &dev)
+    NumPut(orientation, dev, 132, "UInt")
+    DllCall("ChangeDisplaySettingsExA", "UInt", 0, "Ptr", &dev, "UInt", 0, "UInt", 0x01, "UInt", 0)
 }
