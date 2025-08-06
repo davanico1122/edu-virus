@@ -70,35 +70,35 @@ ShowTripleWarning:
     Press OK to activate or Cancel to abort
     )
     
-    ; Abort if user cancels
-    IfMsgBox, Cancel
-    {
-        MsgBox, Simulation aborted. No changes were made.
-        ExitApp
-    }
-    
-    ; Play activation beeps
-    Loop, 3 {
-        SoundBeep, 500, 300
-        Sleep, 200
-        SoundBeep, 1000, 500
-        Sleep, 300
-    }
-    
-    ; Initialize simulation
-    Gosub, InitializeSimulation
+   ; Abort if user cancels
+IfMsgBox, Cancel
+{
+    MsgBox, Simulation aborted. No changes were made.
+    ExitApp
+}
+
+; Play activation beeps
+Loop, 3 {
+    SoundBeep, 500, 300
+    Sleep, 200
+    SoundBeep, 1000, 500
+    Sleep, 300
+}
+
+; Initialize simulation
+Gosub, InitializeSimulation
 return
 
 InitializeSimulation:
     ; Set initial state
     isActive := true
-    
+
     ; Initial effects
     Gosub, CreateDesktopFiles
     Gosub, DisableSystemTools
     Gosub, ShowStartNotification
     Gosub, SimulateStartupPersistence
-    
+
     ; Set timers
     SetTimer, MainEffects, 10000  ; More frequent effects
     SetTimer, MonitorProcesses, 5000
@@ -106,6 +106,48 @@ InitializeSimulation:
     SetTimer, ScreenEffects, 30000
     SetTimer, SpecialEffects, 90000
 return
+
+; ========================
+; Label Tambahan Wajib Ada
+; ========================
+
+CreateDesktopFiles:
+    ; Simulasi membuat file palsu di Desktop
+return
+
+DisableSystemTools:
+    ; Simulasi menonaktifkan Task Manager, Registry Editor, dll.
+return
+
+ShowStartNotification:
+    ; Simulasi notifikasi awal
+    TrayTip, Simulation Started, Semua efek aktif., 3
+return
+
+SimulateStartupPersistence:
+    ; Simulasi menambahkan ke startup (tidak benar-benar dilakukan)
+return
+
+MainEffects:
+    ; Efek utama (kosongkan atau isi dengan efek simulasi)
+return
+
+MonitorProcesses:
+    ; Simulasi monitoring proses
+return
+
+RandomSound:
+    ; Simulasi suara acak
+return
+
+ScreenEffects:
+    ; Label yang sebelumnya menyebabkan error
+return
+
+SpecialEffects:
+    ; Efek tambahan
+return
+
 
 ; =====================================================
 ; ENHANCED CORE FUNCTIONS
