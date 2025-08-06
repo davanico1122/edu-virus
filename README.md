@@ -144,7 +144,7 @@ Educational virus simulation script built with AutoHotkey v1.1 for cybersecurity
 ```
 virus_simulation/
 ├── virus_simulation.ahk     # Main script
-├── joke.exe     # in relase
+├── joke.exe     # in releases
 ├── README.md               # This file
 └── logs/                   # Effect logs (optional)
 ```
