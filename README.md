@@ -144,7 +144,7 @@ Educational virus simulation script built with AutoHotkey v1.1 for cybersecurity
 ```
 virus_simulation/
 ├── virus_simulation.ahk     # Main script
-├── joke.exe     # in releases
+├── joke.exe     # in relaeses
 ├── README.md               # This file
 └── logs/                   # Effect logs (optional)
 ```
@@ -241,7 +241,6 @@ virus_simulation/
 - Improved user interface
 
 ---
-
 **Remember**: This is a simulation for learning purposes. Real malware can cause permanent damage to your system and data. Always practice cybersecurity best practices and keep your systems updated and protected.
 
 **Stay Safe, Stay Educated! **
