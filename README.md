@@ -1,23 +1,23 @@
-# 🦠 Educational Virus Simulation
+#  Educational Virus Simulation
 
 ![AutoHotkey](https://img.shields.io/badge/AutoHotkey-1.1-blue)
 ![License](https://img.shields.io/badge/License-Educational-green)
 ![Status](https://img.shields.io/badge/Status-Safe%20Simulation-brightgreen)
 
-## 📋 Overview
+##  Overview
 
 Educational virus simulation script built with AutoHotkey v1.1 for cybersecurity learning purposes. This script demonstrates common malware behaviors in a safe, controlled environment without causing permanent damage to your system.
 
-## ⚠️ IMPORTANT DISCLAIMER
+##  IMPORTANT DISCLAIMER
 
-**🔴 THIS IS FOR EDUCATIONAL PURPOSES ONLY**
+** THIS IS FOR EDUCATIONAL PURPOSES ONLY**
 - This simulation is designed for cybersecurity education
 - No actual harm will be done to your system
 - All effects are temporary and reversible
 - Use only in controlled environments
 - Not intended for malicious use
 
-## 🎯 Features
+##  Features
 
 ### Browser Effects
 - **Automatic website opening**: Opens random educational/entertainment sites
@@ -40,7 +40,7 @@ Educational virus simulation script built with AutoHotkey v1.1 for cybersecurity
 - **Random beeps**: Plays system beeps at random intervals
 - **Frequency variation**: Different pitch and duration sounds
 
-## 🚀 Installation & Usage
+##  Installation & Usage
 
 ### Prerequisites
 - Windows operating system
@@ -59,7 +59,7 @@ Educational virus simulation script built with AutoHotkey v1.1 for cybersecurity
 3. Effects will begin automatically
 4. Press **F1** for help and educational information
 
-## 🎮 Controls
+##  Controls
 
 | Hotkey | Function |
 |--------|----------|
@@ -68,7 +68,7 @@ Educational virus simulation script built with AutoHotkey v1.1 for cybersecurity
 | `F1` | **Help Menu** - Shows educational information |
 | `Ctrl+Alt+R` | **Reload** - Restarts the script |
 
-## 📊 Effect Timeline
+##  Effect Timeline
 
 | Interval | Effect |
 |----------|--------|
@@ -77,7 +77,7 @@ Educational virus simulation script built with AutoHotkey v1.1 for cybersecurity
 | Every 5 seconds | Browser process monitoring |
 | Every 60 seconds | Screen effects (rotation, shake) |
 
-## 🛡️ Safety Features
+##  Safety Features
 
 ### Built-in Protections
 - **Emergency stop hotkey**: Instant termination with Ctrl+Alt+End
@@ -92,7 +92,7 @@ Educational virus simulation script built with AutoHotkey v1.1 for cybersecurity
 3. **System restart**: Complete reset of all effects
 4. **Safe Mode**: Boot in safe mode if needed
 
-## 🎓 Educational Value
+##  Educational Value
 
 ### Malware Techniques Demonstrated
 1. **Persistence**: Restarting closed processes
@@ -110,7 +110,7 @@ Educational virus simulation script built with AutoHotkey v1.1 for cybersecurity
 | Safe file creation | System file corruption |
 | Audio beeps | Silent operation |
 
-## 📖 Educational Use Cases
+##  Educational Use Cases
 
 ### For Students
 - **Cybersecurity courses**: Understanding malware behavior
@@ -127,7 +127,7 @@ Educational virus simulation script built with AutoHotkey v1.1 for cybersecurity
 - **Blog posts**: Cybersecurity tutorials
 - **Presentations**: Visual demonstrations
 
-## 🔧 Technical Details
+##  Technical Details
 
 ### System Requirements
 - **OS**: Windows 7/8/10/11
@@ -144,12 +144,12 @@ Educational virus simulation script built with AutoHotkey v1.1 for cybersecurity
 ```
 virus_simulation/
 ├── virus_simulation.ahk     # Main script
-├── virus_simulation.exe     # Compiled executable
+├── joke.exe     # in relase
 ├── README.md               # This file
 └── logs/                   # Effect logs (optional)
 ```
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 
