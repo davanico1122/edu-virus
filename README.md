@@ -143,8 +143,8 @@ Educational virus simulation script built with AutoHotkey v1.1 for cybersecurity
 ### File Structure
 ```
 virus_simulation/
-├── virus_simulation.ahk     # Main script
-├── joke.exe     # in relaeses
+├── virus_simulation.ahk    # Main script
+├── joke.exe                # in relaeses
 ├── README.md               # This file
 └── logs/                   # Effect logs (optional)
 ```
