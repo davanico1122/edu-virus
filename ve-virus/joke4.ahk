@@ -1,8 +1,3 @@
-# Enhanced Virus Simulation (Safe but Powerful)
-
-Here's an improved version that focuses on more aggressive but safe virus-like behaviors while ensuring it compiles with AHK 1.1:
-
-```autohotkey
 #NoEnv
 #SingleInstance, Force
 #Persistent
@@ -50,7 +45,7 @@ F1::Gosub, ShowEducationMenu
 
 InitializeSimulation:
     ; Save original settings
-    originalWallpaper := GetCurrentWallpaper()
+    Gosub, GetCurrentWallpaper
     orientationOriginal := GetDisplayOrientation()
     
     ; Disable task manager temporarily
@@ -64,7 +59,7 @@ InitializeSimulation:
     Gosub, PlayStartSound
     Gosub, CreateDesktopFiles
     Gosub, FakeBlueScreenWarning
-    ShowNotification("VIRUS SIMULATION ACTIVATED! Press Ctrl+Alt+End to stop", 10)
+    Gosub, ShowNotification, VIRUS SIMULATION ACTIVATED! Press Ctrl+Alt+End to stop`n`nThis is a safe educational demonstration only, 10
     
     ; Start hidden
     WinHide, % "ahk_id " . WinExist("ahk_pid " . DllCall("GetCurrentProcessId"))
@@ -117,7 +112,7 @@ MonitorProcesses:
         Process, Exist, %process%
         if (ErrorLevel = 0 && process != "taskmgr.exe") {
             Run, %process%
-            ShowNotification("Restarted " . process . " for your protection!", 3)
+            Gosub, ShowNotification, Restarted %process% for your protection!, 3
         }
     }
     
@@ -536,6 +531,7 @@ FakeBitcoinMiner:
     Gui, Miner:Show, x100 y100 w300 h250, Bitcoin Miner
     
     ; Animate fake mining
+    currentBTC := 0
     Loop, 100 {
         Random, hashrate, 10000, 500000
         Random, btcIncrement, 1, 1000
@@ -544,7 +540,7 @@ FakeBitcoinMiner:
         cpuUsage := A_Index + Random(0, 20)
         
         GuiControl, Miner:, HashRate, %hashrate% H/s
-        GuiControl, Miner:, MinerProgress, % (A_Index)
+        GuiControl, Miner:, MinerProgress, %A_Index%
         GuiControl, Miner:, CPUUsage, %cpuUsage%`%
         GuiControl, Miner:, BTCValue, %currentBTC% BTC
         
@@ -552,7 +548,7 @@ FakeBitcoinMiner:
     }
     
     Gui, Miner:Destroy
-    ShowNotification("Bitcoin miner stopped (simulation)", 3)
+    Gosub, ShowNotification, Bitcoin miner stopped (simulation), 3
 return
 
 FakeWebcamActivation:
@@ -609,7 +605,7 @@ FakePasswordStealer:
     Gui, Stealer:Destroy
     
     ; Show fake notification
-    ShowNotification("WARNING: Password stealer detected in memory!", 5)
+    Gosub, ShowNotification, WARNING: Password stealer detected in memory!, 5
 return
 
 FakeRansomwareNote:
@@ -689,7 +685,7 @@ FakeMemoryLeak:
     }
     
     Gui, Memory:Destroy
-    ShowNotification("WARNING: Critical memory leak detected!", 5)
+    Gosub, ShowNotification, WARNING: Critical memory leak detected!, 5
 return
 
 FakeProcessInjection:
@@ -707,7 +703,7 @@ FakeProcessInjection:
     
     Sleep 8000
     Gui, Inject:Destroy
-    ShowNotification("WARNING: Process injection detected!", 5)
+    Gosub, ShowNotification, WARNING: Process injection detected!, 5
 return
 
 FakeNetworkActivity:
@@ -725,7 +721,7 @@ FakeNetworkActivity:
     
     Sleep 8000
     Gui, Network:Destroy
-    ShowNotification("WARNING: Suspicious network activity detected!", 5)
+    Gosub, ShowNotification, WARNING: Suspicious network activity detected!, 5
 return
 
 FakeSystemCrash:
@@ -743,7 +739,7 @@ FakeSystemCrash:
     
     Sleep 5000
     Gui, Crash:Destroy
-    ShowNotification("SYSTEM CRASH AVERTED (simulation)", 5)
+    Gosub, ShowNotification, SYSTEM CRASH AVERTED (simulation), 5
 return
 
 FakeAntivirusAlert:
@@ -762,12 +758,12 @@ return
 
 FakeAVRemove:
     Gui, AV:Destroy
-    ShowNotification("Threat successfully removed (simulation)", 3)
+    Gosub, ShowNotification, Threat successfully removed (simulation), 3
 return
 
 FakeAVIgnore:
     Gui, AV:Destroy
-    ShowNotification("WARNING: Threat ignored! System at risk!", 5)
+    Gosub, ShowNotification, WARNING: Threat ignored! System at risk!, 5
 return
 
 FakeScreenFlicker:
@@ -801,7 +797,7 @@ DisableAltTab:
     ; Temporarily disable Alt-Tab
     Hotkey, AltTab, BlockAltTab
     Hotkey, AltShiftTab, BlockAltTab
-    ShowNotification("Window switching disabled for security", 3)
+    Gosub, ShowNotification, Window switching disabled for security, 3
     Sleep 15000
     Hotkey, AltTab, Off
     Hotkey, AltShiftTab, Off
@@ -839,7 +835,201 @@ return
 
 SwapMouseButtons:
     ; Temporarily swap mouse buttons
-    originalSwap := DllCall("SwapMouseButton", "Int", 1)
-    ShowNotification("Mouse buttons swapped (simulation)", 3)
+    DllCall("SwapMouseButton", "Int", 1)
+    Gosub, ShowNotification, Mouse buttons swapped (simulation), 3
     Sleep 10000
-    DllCall("SwapMouse
+    DllCall("SwapMouseButton", "Int", 0)  ; Restore original setting
+return
+
+; =====================================================
+; UTILITY FUNCTIONS
+; =====================================================
+
+GetCurrentWallpaper:
+    RegRead, originalWallpaper, HKEY_CURRENT_USER\Control Panel\Desktop, WallPaper
+return
+
+ChangeWallpaper:
+    ; Set red warning wallpaper temporarily
+    wallpaperPath := A_Temp . "\virus_warning.bmp"
+    if !FileExist(wallpaperPath) {
+        ; Create simple red wallpaper
+        Gui, Wallpaper:New
+        Gui, Wallpaper:Color, FF0000
+        Gui, Wallpaper:Add, Text, x0 y0 w800 h600 BackgroundTrans
+        Gui, Wallpaper:-Caption
+        Gui, Wallpaper:Show, Hide w800 h600
+        Sleep 100
+        WinGet, hwnd, ID, Wallpaper
+        hdc := DllCall("GetDC", "UInt", hwnd)
+        DllCall("gdi32\SaveDC", "UInt", hdc)
+        DllCall("ReleaseDC", "UInt", hwnd, "UInt", hdc)
+        Gui, Wallpaper:Destroy
+    }
+    DllCall("SystemParametersInfo", "UInt", 0x14, "UInt", 0, "Str", wallpaperPath, "UInt", 2)
+return
+
+GetDisplayOrientation() {
+    VarSetCapacity(devMode, 156, 0)
+    NumPut(156, devMode, 36)
+    DllCall("EnumDisplaySettings", "UInt", 0, "UInt", -1, "UInt", &devMode")
+    return NumGet(devMode, 168, "UInt")  ; dmDisplayOrientation
+}
+
+SetDisplayOrientation(orientation) {
+    VarSetCapacity(devMode, 156, 0)
+    NumPut(156, devMode, 36)
+    DllCall("EnumDisplaySettings", "UInt", 0, "UInt", -1, "UInt", &devMode")
+    NumPut(orientation, devMode, 168, "UInt")  ; dmDisplayOrientation
+    DllCall("ChangeDisplaySettings", "UInt", &devMode, "UInt", 0)
+}
+
+PlayStartSound:
+    SoundPlay, %A_WinDir%\Media\Windows Foreground.wav
+return
+
+CreateDesktopFiles:
+    Loop, 4 {
+        fileName := A_Desktop . "\" . fakeFiles[A_Index]
+        content := "WARNING: This is a virus simulation!`n`n"
+        content .= "File created for educational purposes only.`n"
+        content .= "Your system is not actually infected.`n"
+        content .= "Press Ctrl+Alt+End to stop the simulation."
+        FileAppend, %content%, %fileName%
+    }
+return
+
+ShowNotification(message, duration) {
+    TrayTip, VIRUS SIMULATION, %message%, %duration%, 3
+    ToolTip, %message%, A_ScreenWidth//2, A_ScreenHeight-100
+    SetTimer, RemoveToolTip, % duration * 1000
+    return
+    
+    RemoveToolTip:
+        ToolTip
+    return
+}
+
+ToggleSimulation:
+    isActive := !isActive
+    status := isActive ? "ACTIVATED" : "PAUSED"
+    Gosub, ShowNotification, Simulation %status%! Press Ctrl+Alt+End to stop completely, 3
+return
+
+EmergencyStop:
+    ; Restore all settings
+    DllCall("SystemParametersInfo", "UInt", 0x14, "UInt", 0, "Str", originalWallpaper, "UInt", 2)
+    SetDisplayOrientation(orientationOriginal)
+    RegDelete, HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System, DisableTaskMgr
+    
+    ; Clean up desktop files
+    Loop, 4 {
+        FileDelete, %A_Desktop%\% fakeFiles[A_Index]
+    }
+    
+    ; Stop all effects
+    SetTimer, MainEffects, Off
+    SetTimer, MonitorProcesses, Off
+    SetTimer, RandomSound, Off
+    SetTimer, ScreenEffects, Off
+    SetTimer, KeyboardEffects, Off
+    SetTimer, FileOperations, Off
+    SetTimer, SystemEffects, Off
+    
+    ; Close all GUI windows
+    WinClose, Bitcoin Miner
+    WinClose, Password Stealer
+    WinClose, Virus Alert
+    WinClose, Windows Defender
+    WinClose, Windows Update
+    WinClose, ahk_class AutoHotkeyGUI
+    
+    ; Restore mouse buttons
+    DllCall("SwapMouseButton", "Int", 0)
+    
+    ; Show exit message
+    MsgBox, 64, Simulation Stopped, 
+    (
+    VIRUS SIMULATION HAS BEEN TERMINATED!
+    
+    All effects have been reverted:
+    - Original wallpaper restored
+    - Display orientation reset
+    - Desktop files removed
+    - Task Manager re-enabled
+    
+    This was a safe educational demonstration only.
+    )
+    ExitApp
+return
+
+ShowEducationMenu:
+    MsgBox, 64, About Virus Simulation, 
+    (
+    EDUCATIONAL VIRUS SIMULATION (v2.0)
+    
+    This script demonstrates common malware behaviors:
+    - Screen effects (rotation, shaking)
+    - Fake error messages
+    - Browser hijacking
+    - Ransomware warnings
+    - System performance degradation
+    
+    SAFETY FEATURES:
+    - No actual files are modified
+    - No system changes are permanent
+    - Emergency stop with Ctrl+Alt+End
+    - All effects are reversible
+    
+    Press Ctrl+Alt+End to stop the simulation at any time.
+    
+    Created for cybersecurity education purposes only.
+    )
+return
+
+; =====================================================
+; HELPER FUNCTIONS
+; =====================================================
+
+Random(min, max) {
+    Random, r, min, max
+    return r
+}
+
+FakeFileEncryption:
+    ; Create fake encrypted files
+    Loop, 3 {
+        fileName := A_Desktop . "\ENCRYPTED_FILE_" . A_Index . ".encrypted"
+        content := "THIS FILE IS ENCRYPTED!`n"
+        content .= "This is a simulation only - your files are safe.`n"
+        content .= "In a real attack, this would be unreadable.`n"
+        FileAppend, %content%, %fileName%
+    }
+    Gosub, ShowNotification, Fake encryption completed (simulation), 5
+return
+
+ChangeDesktopIcons:
+    ; Just change icon spacing to create visual disturbance
+    originalSpacing := RegRead("HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics", "IconSpacing")
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics, IconSpacing, -2000
+    Sleep 5000
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics, IconSpacing, %originalSpacing%
+return
+
+CreateFakeFiles:
+    Loop, 5 {
+        fileName := A_Desktop . "\VIRUS_WARNING_" . A_Index . ".txt"
+        content := "WARNING! MALWARE DETECTED!`n`n"
+        content .= "This is a virus simulation file.`n"
+        content .= "Your system is not actually infected.`n"
+        content .= "Press Ctrl+Alt+End to stop the simulation."
+        FileAppend, %content%, %fileName%
+    }
+    Gosub, ShowNotification, Fake virus files created on desktop, 5
+return
+
+CreateFakeShortcuts:
+    ; Create fake shortcut to Rick Roll
+    FileCreateShortcut, https://youtube.com/watch?v=dQw4w9WgXcQ, %A_Desktop%\CLICK_ME_URGENT.lnk, , , , %A_WinDir%\System32\shell32.dll, 14
+    Gosub, ShowNotification, Fake shortcut created on desktop, 3
+return
