@@ -275,15 +275,16 @@ MouseJitter:
         if (shouldClick = 1) {
             Random, clickType, 1, 3
             if (clickType = 1) {
-                Click
+                Click  ; Left click
             } else if (clickType = 2) {
-                RightClick
+                Click, right  ;  Fix: gunakan perintah valid
             } else {
                 MouseClick, Middle
             }
         }
     }
 return
+
 
 ChangeClipboard:
     savedClip := ClipboardAll
