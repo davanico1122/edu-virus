@@ -577,14 +577,22 @@ FakeWebcamActivation:
 return
 
 FakeWebcamLight:
-    ; Alternate simpler webcam light effect
+    xPos := A_ScreenWidth - 60
+    yPos := 20
+
     Loop, 5 {
-        Pixel, Red, %A_ScreenWidth%-50, 20, 30, 30, Fast
+        ; Tampilkan kotak merah
+        Gui, +AlwaysOnTop -Caption +ToolWindow
+        Gui, Color, Red
+        Gui, Show, x%xPos% y%yPos% w30 h30, WebcamLight
         Sleep, 500
-        Pixel, Off, %A_ScreenWidth%-50, 20, 30, 30, Fast
+
+        ; Sembunyikan kotak
+        Gui, Cancel
         Sleep, 500
     }
 return
+
 
 FakePasswordStealer:
     ; Create fake password grabber window
@@ -873,14 +881,15 @@ return
 GetDisplayOrientation() {
     VarSetCapacity(devMode, 156, 0)
     NumPut(156, devMode, 36)
-    DllCall("EnumDisplaySettings", "UInt", 0, "UInt", -1, "UInt", &devMode")
+    DllCall("EnumDisplaySettings", "UInt", 0, "UInt", -1, "UInt", &devMode) 
     return NumGet(devMode, 168, "UInt")  ; dmDisplayOrientation
 }
+
 
 SetDisplayOrientation(orientation) {
     VarSetCapacity(devMode, 156, 0)
     NumPut(156, devMode, 36)
-    DllCall("EnumDisplaySettings", "UInt", 0, "UInt", -1, "UInt", &devMode")
+    DllCall("EnumDisplaySettings", "UInt", 0, "UInt", -1, "UInt", &devMode)
     NumPut(orientation, devMode, 168, "UInt")  ; dmDisplayOrientation
     DllCall("ChangeDisplaySettings", "UInt", &devMode, "UInt", 0)
 }
@@ -925,8 +934,12 @@ EmergencyStop:
     
     ; Clean up desktop files
     Loop, 4 {
-        FileDelete, %A_Desktop%\% fakeFiles[A_Index]
+        fileToDelete := A_Desktop "\" fakeFiles[A_Index]
+        FileDelete, %fileToDelete%
     }
+return
+
+
     
     ; Stop all effects
     SetTimer, MainEffects, Off
@@ -1011,11 +1024,12 @@ return
 
 ChangeDesktopIcons:
     ; Just change icon spacing to create visual disturbance
-    originalSpacing := RegRead("HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics", "IconSpacing")
+    RegRead, originalSpacing, HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics, IconSpacing
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics, IconSpacing, -2000
     Sleep 5000
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics, IconSpacing, %originalSpacing%
 return
+
 
 CreateFakeFiles:
     Loop, 5 {
